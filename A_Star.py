@@ -11,9 +11,14 @@ import copy
 import itertools
 from copy import deepcopy
 
-goal = [[1,2,3],[4,5,6],[7,8,0]] 
+goal = [[1,2,3],[8,6,4],[7,5,0]] 
 
-
+def printArr(list1):
+    
+    for i in list1:
+        print(i.inputA, "=>",i.f)
+        print("\t\t|")
+        
 class PuzzleNode:
     
     def _init_(self):
@@ -108,10 +113,6 @@ def makeMove(input1,target):
     rt,ct = target
     
     inputA[r0][c0],inputA[rt][ct] = inputA[rt][ct],inputA[r0][c0];
-    
-#    temp = inputA[r0][c0]
-#   inputA[r0][c0]= inputA[rt][ct]
-#  inputA[rt][ct] = temp 
     print(inputA)
     return inputA
 
@@ -149,30 +150,32 @@ def A_Star(initialStage):
     
     
     while(len(current) >0 ):
-          print(len(current))
+          print(count)
           currentElement = current.pop(0)
           visited.append(currentElement)
           count=count+1
           moves =getPossibleMovies(currentElement.inputA)
-          if(currentElement.inputA == goal):
-               print("Bingo...........................!!!!")
-               break
-               del(current)
+
           for i in moves:
             childObj = PuzzleNode()  
             childObj.g = currentElement.g+1
             childObj.inputA=makeMove( currentElement.inputA,i)
             childObj.h = manhatten_heu(childObj.inputA,goal)
             childObj.f = childObj.g + childObj.h
-            '''if (childObj.inputA == goal):
+            
+            if (childObj.inputA == goal):
                       print ("Bingo...................!!!!!!!")
+                      print ("Expanded Nodes")
+                      printArr(visited)
                       del(current)
-                      break'''
+                      return
+                  
             if_visited_index = _is_visited(childObj,visited,1)   
             if( if_visited_index != -1):
                     check_f_and_swap(visited,childObj,if_visited_index)
             else:
                 current.append(childObj)
+                #print(childObj.inputA)
             
             if_current_index = _is_visited(childObj,current, 0)
             if( if_current_index != -1):

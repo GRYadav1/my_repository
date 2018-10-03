@@ -1,7 +1,7 @@
 '''
 Created on Sep 23, 2018
 
-@author: gaura
+@author: gaurav
 '''
 import random
 import math
@@ -11,21 +11,33 @@ import copy
 import itertools
 from copy import deepcopy
 
-goal = [[1,2,3],[8,6,4],[7,5,0]] 
+goal = [[1,2,3],[4,5,6],[7,8,0]] 
 
 def printArr(list1):
     
     for i in list1:
         print(i.inputA, "=>",i.f)
         print("\t\t|")
-        
+    print(goal)   
+    
+def printPath(childObj):
+     
+     while(childObj != None):  
+          print(childObj.inputA,"=>",childObj.f)
+          childObj= childObj.Parent
+          print("\t\t|") 
+     print("\t\tInitialStage")    
+     
 class PuzzleNode:
     
     def _init_(self):
         self.h = 0
         self.g = 0
         self.f = 0
+        
+        self.Parent = None
         self.inputA =[]
+        
         
     def printA(self,arr): 
         print(arr)  
@@ -143,8 +155,9 @@ def A_Star(initialStage):
     initialStage.h = manhatten_heu(initialStage.inputA, goal)  
     initialStage.g = count
     initialStage.f = initialStage.g + initialStage.h
+    initialStage.Parent = None   
     current.append(initialStage)
-        
+     
     moves = []
     #i=0
     
@@ -162,11 +175,13 @@ def A_Star(initialStage):
             childObj.inputA=makeMove( currentElement.inputA,i)
             childObj.h = manhatten_heu(childObj.inputA,goal)
             childObj.f = childObj.g + childObj.h
+            childObj.Parent = currentElement
             
             if (childObj.inputA == goal):
                       print ("Bingo...................!!!!!!!")
-                      print ("Expanded Nodes")
-                      printArr(visited)
+                      print ("\nExpanded Nodes/Solution Path--\n")
+                      #printArr(visited)
+                      printPath(childObj)
                       del(current)
                       return
                   

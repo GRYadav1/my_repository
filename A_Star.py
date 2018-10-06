@@ -204,12 +204,13 @@ def A_Star(initialStage, goal, heuristic_type):
             if( if_visited_index != -1):
                     check_f_and_swap(visited,childObj,if_visited_index)
             else:
-                current.append(childObj)
+                #checking if the child is already present in the fringe
+                 if_current_index = _is_visited(childObj,current)
+                 if( if_current_index != -1):
+                      check_f_and_swap(current, childObj, if_current_index)
             
-            #checking if the child is already present in the fringe
-            if_current_index = _is_visited(childObj,current)
-            if( if_current_index != -1):
-                check_f_and_swap(current, childObj, if_current_index)
+                 else: 
+                     current.append(childObj) 
                      
             #sort the fringe in the increasing order of their calculated heuristics
             current = sorted(current, key=lambda p: p.f)

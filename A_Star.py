@@ -153,6 +153,8 @@ def check_f_and_swap(fringe,node,index):
 #method which starts the A* Algorithm    
 def A_Star(initialStage, goal, heuristic_type):
     count = 0
+    count_expanded = 0
+    count_generated = 0
     visited = []
     current = []
     #heuristic calculation for the initial state
@@ -160,6 +162,12 @@ def A_Star(initialStage, goal, heuristic_type):
     initialStage.g = count
     initialStage.f = initialStage.g + initialStage.h
     initialStage.Parent = None   
+    if (initialStage.inputA == goal):
+        print("Bingo")
+        print("Nodes Expanded",count_expanded)
+        print("Nodes Generated",count_generated)        
+        return
+
     current.append(initialStage)
      
     moves = []
@@ -171,7 +179,7 @@ def A_Star(initialStage, goal, heuristic_type):
           visited.append(currentElement)	#adding the current node to visited/explored nodes
           count=count+1
           moves =getPossibleMovies(currentElement.inputA)	#method call to generate all the possible moves from the current state
-
+          count_expanded=count_expanded+1
           #loop to generate all the children nodes from the current node
           for i in moves:
             childObj = PuzzleNode()  
@@ -180,12 +188,14 @@ def A_Star(initialStage, goal, heuristic_type):
             childObj.h = manhatten_heu(childObj.inputA,goal) if heuristic_type == 1 else misplacedTile_heu(childObj.inputA, goal)
             childObj.f = childObj.g + childObj.h #calculation of the heuristic (actual cost + chosen heuristic)
             childObj.Parent = currentElement
-            
+            count_generated=count_generated+1
             #condition to check if the goal state is reached
             if (childObj.inputA == goal):
                       print ("Bingo...................!!!!!!!")
                       print ("\nExpanded Nodes/Solution Path--\n")
                       printPath(childObj) #print the entire path to the goal state
+                      print("Nodes Expanded",count_expanded)
+                      print("Nodes Generated",count_generated)        
                       del(current)
                       return
             

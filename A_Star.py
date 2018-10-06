@@ -14,11 +14,15 @@ from copy import deepcopy
 
 #method to print the path to reach a given node
 def printPath(childObj):
-     while(childObj != None):  
-          print(childObj.inputA,"=>",childObj.f)
-          childObj= childObj.Parent
-          print("\t\t|") 
-     print("\t\tInitialStage")    
+  path = []
+  cost = childObj.g
+  while(childObj != None):
+    path.append(childObj.inputA)
+    childObj= childObj.Parent
+  print("INITIAL STATE \n |")
+  for x in reversed(path):
+        print(x)    
+  print("Total Cost = " + str(cost))
 
 #class to define a node and its characteristics (state, heuristic, actual cost, parent)     
 class PuzzleNode:
@@ -61,7 +65,7 @@ def takeInput():
             k=k+1
         goalState.append(row)
 
-    heuristic_type = input("Enter 1 for Manhattan Heuristic or 2 for Misplaced Tile Heuristic")
+    heuristic_type = int(input("Enter 1 for Manhattan Heuristic or 2 for Misplaced Tile Heuristic"))
         
     return inputA, goalState, heuristic_type
 
@@ -109,7 +113,6 @@ def manhatten_heu(initalStage, GoalStage):
                rx,cx = indexInitial[j]
                ry,cy = indexGoal[j]
                h = h + (abs(rx-ry)+abs(cx-cy))
-               
     return h;
 
 #method to calculate the misplaced tile heuristic
@@ -128,7 +131,6 @@ def makeMove(input1,target):
     rt,ct = target
     
     inputA[r0][c0],inputA[rt][ct] = inputA[rt][ct],inputA[r0][c0];
-    print(inputA)
     return inputA
 
 #method to check if the node has already been explored or is in the fringe; returns -1 if the node is not a duplicate
@@ -174,7 +176,6 @@ def A_Star(initialStage, goal, heuristic_type):
     #i=0
     
     while(len(current) >0 ):
-          print(count)
           currentElement = current.pop(0)
           visited.append(currentElement)	#adding the current node to visited/explored nodes
           count=count+1

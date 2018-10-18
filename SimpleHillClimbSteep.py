@@ -104,7 +104,7 @@ def makeMoves(qholder,heuholder):
     board[rand_row][rand_col]='Q'    
     tempQueen.location=rand_row,rand_col
     #qholder.append(tempQueen)
-    qholder.insert(j,tempQueen)
+    qholder.insert(rand_col,tempQueen)
         #qholder = sorted(qholder, key=lambda p: p.location[1])
     
     
@@ -125,15 +125,16 @@ def main():
     stepsuccess = 0
     stepfailure = 0
     # hardcode list
-    '''tempL =[4,2,6,3,1,5,6,5]
+    '''tempL =[4,5,6,3,4,5,6,5]
     for i in range(0,8):
          
          if (board[tempL[i]][i]== '-'):
                 board[tempL[i]][i] = 'Q'
                 q = Queen();
                 q.location=tempL[i],i
-                qholder.append(q)'''
-#    for l in range(0,1):    
+                qholder.append(q)
+    '''
+    #    for l in range(0,1):    
     #initializearray() 
         
     for i in range(0,8):
@@ -143,11 +144,11 @@ def main():
              q = Queen();
              q.location=rand_row,i
              qholder.append(q)
-                   
+    
       
     for i in range(0,8):
-        print(board[i])              
-                
+         print(board[i])              
+    print("=========")           
         #print(calHeuristic(tempObj.location,board))
         #hillClimb(qholder)
     hprev = -999
@@ -156,15 +157,13 @@ def main():
     #print("TIMES DONE :-",l,"\n\n") 
     while(1):
         hillClimb(qholder)
-        for i in range(0,8):
-             print(heuholder[i])
         stepcount+=1
         makeMoves(qholder,heuholder)
         h = restheuristic(qholder, board)
               
         for i in range(0,8):
             print(board[i])
-            
+        print("================")    
              
         if (h==0):
             print("\nFound it in ",stepcount-1, "iterations..!!\n")
@@ -175,9 +174,12 @@ def main():
                      
             break;
         else:
-            if(hprev == h):
+            if(hprev == h and stepcount > 100):
                 print("Failure steps-,",stepcount-1)
                 stepfailure+=1
+                for i in range(0,8):
+                    print(heuholder[i])
+        
                 break;
         hprev = h
         

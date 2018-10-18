@@ -156,15 +156,19 @@ def main():
        
     #print("TIMES DONE :-",l,"\n\n") 
     while(1):
+        '''perform hill climb and populate heuristic table (heuholder)'''
         hillClimb(qholder)
         stepcount+=1
+        '''Makemove to the minimum heuristic number block'''
         makeMoves(qholder,heuholder)
+        ''' Recalcuate heuristic of all queens'''
         h = restheuristic(qholder, board)
               
         for i in range(0,8):
             print(board[i])
         print("================")    
-             
+        
+        '''if heursitc is 0, bravo! we found a solution'''     
         if (h==0):
             print("\nFound it in ",stepcount-1, "iterations..!!\n")
             for i in range(0,8):
@@ -173,8 +177,10 @@ def main():
             stepsuccess+=1
                      
             break;
-        else:
-            if(hprev == h and stepcount > 100):
+        
+        else:              #Else check if previous heurstic is same as current
+                           # if it is, well unfortunately we failed!!!  
+            if(hprev == h and stepcount > 50):
                 print("Failure steps-,",stepcount-1)
                 stepfailure+=1
                 for i in range(0,8):
@@ -183,7 +189,7 @@ def main():
                 break;
         hprev = h
         
-    print("SUccess:",stepsuccess,"Failure:",stepfailure)
+    print("Success:",stepsuccess,"Failure:",stepfailure)
 
 
 main()

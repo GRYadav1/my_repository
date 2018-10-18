@@ -80,16 +80,29 @@ def findminat(L):
         (n, i, j)
             for j, L2 in enumerate(L)
             for i, n in enumerate(L2)
-               )[1:]
+               )[0:]
 
- 
+def findIndexes(num,heuholder):
+    indexlist =[]
+    for i in  range(0,8):
+        for j in range(0,8):
+            if(heuholder[i][j]==num):
+                indexlist.append([i,j])
+                
+    return indexlist        
 def makeMoves(qholder,heuholder):
     
-    j,i=findminat(heuholder)
-    tempQueen = qholder.pop(j)
+    ''' find minimum number and its indexes'''
+    minnum,j,i=findminat(heuholder)
+    ''' find all locations on that min number'''
+    indexlist = findIndexes(minnum, heuholder);
+    ''' select random row, col from indexlist'''
+    rand_row,rand_col = indexlist[random.randint(0,len(indexlist)-1)]
+    
+    tempQueen = qholder.pop(rand_col)
     board[tempQueen.location[0]][tempQueen.location[1]]='-'
-    board[i][j]='Q'    
-    tempQueen.location=i,j
+    board[rand_row][rand_col]='Q'    
+    tempQueen.location=rand_row,rand_col
     #qholder.append(tempQueen)
     qholder.insert(j,tempQueen)
         #qholder = sorted(qholder, key=lambda p: p.location[1])
@@ -143,20 +156,23 @@ def main():
     #print("TIMES DONE :-",l,"\n\n") 
     while(1):
         hillClimb(qholder)
+        for i in range(0,8):
+             print(heuholder[i])
         stepcount+=1
         makeMoves(qholder,heuholder)
         h = restheuristic(qholder, board)
               
-        #for i in range(0,8):
-        #    print(board[i])        
+        for i in range(0,8):
+            print(board[i])
+            
+             
         if (h==0):
             print("\nFound it in ",stepcount-1, "iterations..!!\n")
             for i in range(0,8):
                 print(board[i])
             print("-----------------")     
             stepsuccess+=1
-            for i in range(0,8):
-                 print(heuholder[i])          
+                     
             break;
         else:
             if(hprev == h):

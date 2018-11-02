@@ -137,14 +137,14 @@ def main():
         stepcount = 0
         while(1):
             hprev = restheuristic(qholder, board)
-                if (hprev == 0):
-                    print("\nFound it in ", stepcount - 1, "Steps..!!\n")
-                    totalsuccess_step = totalsuccess_step + stepcount - 1
-                    for i in range(0, nQueen):
-                        print(board[i])
-                    print("-----------------")
-                    stepsuccess += 1
-                    break
+            if (hprev == 0):
+                print("\nFound it in ", stepcount - 1, "Steps..!!\n")
+                totalsuccess_step = totalsuccess_step + stepcount - 1
+                for i in range(0, nQueen):
+                    print(board[i])
+                print("-----------------")
+                stepsuccess += 1
+                break
 
             '''perform hill climb and populate heuristic table (heuholder)'''
             hillClimb(qholder)

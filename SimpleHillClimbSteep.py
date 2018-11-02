@@ -1,16 +1,5 @@
-'''
-Created on Nov 1, 2018
-
-@author: gaurav
-'''
-'''
-Created on Oct 18, 2018
-
-@author: gaurav
-'''
 import random
 import copy
-# import pdb
 
 board = [[]]
 qholder = [[]]
@@ -60,17 +49,12 @@ def calHeuristic(queenLoc, board):
 
 
 def hillClimb(qholder):
-
     for k in range(0, nQueen):
-
         for i in range(0, nQueen):
-            # listTemp=i,0
             tempqholder = copy.deepcopy(qholder)
             tempObj = tempqholder.pop(k)
             boardcopy = copy.deepcopy(board)
-
             boardcopy[tempObj.location[0]][tempObj.location[1]] = '-'
-
             boardcopy[i][k] = 'Q'
             colheu = calHeuristic([i, k], boardcopy)
             resth = restheuristic(tempqholder, boardcopy)
@@ -79,11 +63,6 @@ def hillClimb(qholder):
                 heuholder[q.location[0]][q.location[1]] = nQueen * nQueen
             del(boardcopy)
             del(tempqholder)
-
-    # for i in range(0,8):
-    #   print(heuholder[i])
-
-    # print()
 
 
 def findminat(L):
@@ -101,7 +80,6 @@ def findIndexes(num, heuholder, qholder):
     for i in range(0, nQueen):
         for j in range(0, nQueen):
             if heuholder[i][j] == num:
-                # pdb.set_trace()
                 for q in qholder:
                     if i == q.location[0] and j == q.location[1]:
                         flag = 1
@@ -122,9 +100,7 @@ def makeMoves(qholder, heuholder):
     board[tempQueen.location[0]][tempQueen.location[1]] = '-'
     board[rand_row][rand_col] = 'Q'
     tempQueen.location = rand_row, rand_col
-    # qholder.append(tempQueen)
     qholder.insert(rand_col, tempQueen)
-    # qholder = sorted(qholder, key=lambda p: p.location[1])
 
 
 def initializearray(nQueen):
@@ -139,7 +115,6 @@ def initializearray(nQueen):
             q = Queen()
             q.location = rand_row, i
             qholder.append(q)
-
     global heuholder
     heuholder = [[0 for i in range(1, nQueen + 1)] for j in range(1, nQueen + 1)]
 
@@ -153,61 +128,25 @@ def main():
     global nQueen
     nQueen = int(input("Enter number of queens:"))
     variant = int(input("Select one of the variants:\n 1. Steep Ascent Hill CLimbing\n 2. Sideways Move\n 3. Random Restart without Sideways Move\n 4. Random Restart with Sideways Move\n"))
-    if variant == 3 or variant == 4:
-        iterations = 101
-    else:
-        iterations = 101
-        pass
+    iterations = random.randint(100, 500)
     for x in range(1, iterations):
-        print("Current Interation :", x)
-        # qholder=[]
         stepsuccess = 0
         stepfailure = 0
-        # hardcode list
-
         # nQueen = 9
         initializearray(nQueen)
-        '''tempL =[4,5,6,3,4,5,6,5]
-        for i in range(0,8):
-             if (board[tempL[i]][i]== '-'):
-                    board[tempL[i]][i] = 'Q'
-                    q = Queen();
-                    q.location=tempL[i],i
-                    qholder.append(q)
-        '''
-        #    for l in range(0,1):
-        # initializearray()
-
-        # for i in range(0, nQueen):
-        #     rand_row = random.randint(0, nQueen - 1)
-        #     if (board[rand_row][i] == '-'):
-        #         board[rand_row][i] = 'Q'
-        #         q = Queen()
-        #         q.location = rand_row, i
-        #         qholder.append(q)
-
-        for i in range(0, nQueen):
-            print(board[i])
-        print("=========")
-        # print(calHeuristic(tempObj.location,board))
-        # hillClimb(qholder)
-        # hprev = restheuristic(qholder, board)
         stepcount = 0
-
-        # print("TIMES DONE :-",l,"\n\n")
         while(1):
             hprev = restheuristic(qholder, board)
+
             '''perform hill climb and populate heuristic table (heuholder)'''
             hillClimb(qholder)
             stepcount += 1
+
             '''Makemove to the minimum heuristic number block'''
             makeMoves(qholder, heuholder)
+
             ''' Recalcuate heuristic of all queens'''
             h = restheuristic(qholder, board)
-
-            for i in range(0, nQueen):
-                print(board[i])
-            print("================")
 
             '''if heursitc is 0, bravo! we found a solution'''
             if (h == 0):
@@ -225,19 +164,20 @@ def main():
                     boolValue = (hprev <= h)
                 elif variant == 2:
                     boolValue = (hprev == h and stepcount > 100) or hprev < h
-                elif (variant == 3 and hprev <= h) or (variant == 4 and ((hprev == h and stepcount > 100) or hprev < h)):
+                elif (variant == 3 and hprev <= h):
+                    initializearray(nQueen)
+                    total_restart += 1
+                elif variant == 4 and ((hprev == h and stepcount > 100) or hprev < h):
                     initializearray(nQueen)
                     total_restart += 1
                 if boolValue is True:
-                    print("Failure steps-,", stepcount - 1)
                     totalfail_step = totalfail_step + stepcount - 1
                     stepfailure += 1
                     for i in range(0, nQueen):
-                        print(heuholder[i])
+                        print(board[i])
                     break
         success_total += stepsuccess
         fail_total += stepfailure
-        print("Success:", stepsuccess, "Failure:", stepfailure)
     print("Total Success = " + str(success_total))
     print("Total Failed = " + str(fail_total))
     if success_total != 0:
@@ -247,7 +187,7 @@ def main():
     success_rate = (success_total / (success_total + fail_total)) * 100
     print("Success Rate = " + str(success_rate))
     if variant == 3 or variant == 4:
-        print("Random Restarts required = " + str(total_restart))
+        print("Random Restarts required = " + str(total_restart / iterations))
 
 
 main()
